@@ -29,70 +29,66 @@ export default function ConfirmEligibility({
     handleEligibleStatus(isEligible);
   }, [eligibilityCheckboxes, handleEligibleStatus]);
   return (
-    <div>
-      <h1>Calculate your R&D credit estimate</h1>
+    <div className="m-auto py-4 w-1/2">
       <h2>
-        First, confirm your research and development activity is eligible for
-        the R&D credit
+        First, confirm your company's research and development activity is
+        eligible for the R&D credit.
       </h2>
-      <div>
-        <label>
+      <div className="py-1">
+        <label className="">
           <input
             type="checkbox"
             name="businessComponent"
             checked={eligibilityCheckboxes.businessComponent}
             onChange={handleCheckboxChange}
-          />
-          Permitted purpose
+          />{" "}
+          Permitted purpose{" "}
         </label>
         <Tooltip
-          text="Activity is is related to creating a new or improving an existing
+          text="The activity is related to creating a new or improving an existing
         business component"
         ></Tooltip>
       </div>
-      <div>
+      <div className="py-1">
         <label>
           <input
             type="checkbox"
             name="technicalUncertainty"
             checked={eligibilityCheckboxes.technicalUncertainty}
             onChange={handleCheckboxChange}
-          />
-          Elimination of uncertainty
+          />{" "}
+          Elimination of uncertainty{" "}
         </label>
         <Tooltip
           text="The activity is aimed at addressing technological or scientific
         uncertainties through experimentation and innovation."
         ></Tooltip>
       </div>
-      <div>
+      <div className="py-1">
         <label>
           <input
             type="checkbox"
             name="processOrExperimentation"
             checked={eligibilityCheckboxes.processOrExperimentation}
             onChange={handleCheckboxChange}
-          />
-          Process of experimentation
+          />{" "}
+          Process of experimentation{" "}
         </label>
-        <Tooltip
-          text="The Activity involves a process by which you tested alternatives and
-        resolved the uncertainty above."
-        ></Tooltip>
+        <Tooltip text="The activity involves a systematic process to identify and evaluate different alternatives to achieve the intended result."></Tooltip>
       </div>
-      <div>
+      <div className="py-1">
         <label>
           <input
             type="checkbox"
             name="scientificPrinciples"
             checked={eligibilityCheckboxes.scientificPrinciples}
             onChange={handleCheckboxChange}
-          />
-          Technological in nature
+          />{" "}
+          Technological in nature{" "}
         </label>
         <Tooltip
-          text="The activity relies on the principles of physical, biological, or
-        computer science or engineering."
+          text="The activity relies on the principles of engineering, physics, chemistry,
+        computer science, or other scientific disciplines."
         ></Tooltip>
       </div>
     </div>
