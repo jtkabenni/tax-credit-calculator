@@ -1,5 +1,5 @@
 # R&D credit calculator
 
-Get an estimate of your company's R&D credit.
+Unlock insights into your company's R&D tax credit potential with our R&D credit estimator tool.
 
 Created with React.js, Typescript, and Tailwind. Deployed at https://tax-credit-calculator.vercel.app/

@@ -24,6 +24,7 @@ export default function EstimateCreditForm() {
   const [credit, setCredit] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [isFirstYear, setIsFirstYear] = useState(false);
+  const [prevYearsMessage, setPrevYearsMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,19 +32,28 @@ export default function EstimateCreditForm() {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setPrevYearsMessage("");
     e.preventDefault();
     let { wages, contractors, supplies, cloudComputing, year1, year2, year3 } =
       formData;
     const QRE = wages + contractors + supplies + cloudComputing;
 
     //calculate total credit based on whether or not first year with QRE
-    const total = isFirstYear
-      ? calculateFirstYearRDCredit(QRE)
-      : calculateRDCredit(year1, year2, year3, QRE);
+    let total;
 
-    setCredit(total);
+    if (isFirstYear) {
+      total = calculateFirstYearRDCredit(QRE);
+    } else if (!formData.year3 || !formData.year2 || !formData.year1) {
+      setPrevYearsMessage(
+        "Please enter your qualifying research expenditure for the previous three tax years"
+      );
+      return;
+    } else {
+      total = calculateRDCredit(year1, year2, year3, QRE);
+    }
+
+    setCredit(total < 0 ? 0 : total);
     setSubmitted(true);
-    console.log(formData);
   };
 
   return (
@@ -60,59 +70,63 @@ export default function EstimateCreditForm() {
               checked={isFirstYear}
               onChange={(e) => setIsFirstYear(!isFirstYear)}
             />{" "}
-            This is my first year with Qualifying Research Expenditure (QRE)
+            I did not have Qualifying Research Expenditure (QRE) in all three
+            previous tax years.
           </label>
         </div>
         {!isFirstYear && (
-          <div className="flex justify-between">
-            <div className="mb-4 w-full">
-              <label
-                htmlFor="year3"
-                className="block text-sm font-medium text-gray-700"
-              >
-                2023 Total QRE
-              </label>
-              <input
-                type="number"
-                id="year3"
-                name="year3"
-                value={formData.year3}
-                onChange={handleChange}
-                className="mt-1 p-2 w-full border rounded-md"
-              />
+          <div>
+            <div className="flex justify-between">
+              <div className="mb-4 w-full">
+                <label
+                  htmlFor="year3"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  2022 Total QRE
+                </label>
+                <input
+                  type="number"
+                  id="year3"
+                  name="year3"
+                  value={formData.year3}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+              <div className="mb-4 w-full">
+                <label
+                  htmlFor="year2"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  2021 Total QRE
+                </label>
+                <input
+                  type="number"
+                  id="year2"
+                  name="year2"
+                  value={formData.year2}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+              <div className="mb-4 w-full">
+                <label
+                  htmlFor="year1"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  2020 Total QRE
+                </label>
+                <input
+                  type="number"
+                  id="year1"
+                  name="year1"
+                  value={formData.year1}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
             </div>
-            <div className="mb-4 w-full">
-              <label
-                htmlFor="year2"
-                className="block text-sm font-medium text-gray-700"
-              >
-                2022 Total QRE
-              </label>
-              <input
-                type="number"
-                id="year2"
-                name="year2"
-                value={formData.year2}
-                onChange={handleChange}
-                className="mt-1 p-2 w-full border rounded-md"
-              />
-            </div>
-            <div className="mb-4 w-full">
-              <label
-                htmlFor="year1"
-                className="block text-sm font-medium text-gray-700"
-              >
-                2021 Total QRE
-              </label>
-              <input
-                type="number"
-                id="year1"
-                name="year1"
-                value={formData.year1}
-                onChange={handleChange}
-                className="mt-1 p-2 w-full border rounded-md"
-              />
-            </div>
+            <p className="text-red-500"> {prevYearsMessage}</p>
           </div>
         )}
 
@@ -202,7 +216,9 @@ export default function EstimateCreditForm() {
         {submitted && (
           <div className="mb-8">
             <h4 className="text-lg font-semibold text-gray-800 mt-2 mb-4">
-              Your company may be eligible for up to ${credit} in R&D credit
+              Your company may be eligible for up to ${credit} in R&D credit. To
+              ensure your R&D Tax Credit is calculated accurately, please
+              consult an R&D specialist.
             </h4>
           </div>
         )}

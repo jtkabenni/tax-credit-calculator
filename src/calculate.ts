@@ -7,6 +7,9 @@ export function calculateFirstYearRDCredit(QRE: number) {
   // Multiply QRE by 6% to get the current year R&D Tax Credit
   let RDCredit = QRE * ASCPercentage;
   RDCredit = parseFloat(RDCredit.toFixed(2));
+  if (RDCredit < 0) {
+    return 0;
+  }
   return RDCredit;
 }
 
@@ -32,5 +35,9 @@ export function calculateRDCredit(
   // Multiply the remainder by 14% to get the current year R&D Tax Credit
   let RDCredit = remainder * ASCPercentage;
   RDCredit = parseFloat(RDCredit.toFixed(2));
+
+  if (RDCredit < 0) {
+    return 0;
+  }
   return RDCredit;
 }
