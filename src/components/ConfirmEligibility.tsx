@@ -1,4 +1,4 @@
-import Tooltip from "./Tooltip";
+import Tooltip from "../Tooltip";
 import React, { useState, useEffect } from "react";
 
 interface ConfirmEligibilityProps {
@@ -23,17 +23,23 @@ export default function ConfirmEligibility({
     }));
   };
 
-  useEffect(() => {
-    // Calculate isEligible based on checkbox values
+  function checkEligibility() {
     const isEligible = Object.values(eligibilityCheckboxes).every(Boolean);
     handleEligibleStatus(isEligible);
-  }, [eligibilityCheckboxes, handleEligibleStatus]);
+  }
+
   return (
     <div className="m-auto py-4 w-1/2">
-      <h2>
-        First, confirm your company's research and development activity is
-        eligible for the R&D credit.
-      </h2>
+      <h3 className="text-xl font-semibold text-blue-600 mt-3 mb-2">
+        Confirm eligibility
+      </h3>
+      <p>
+        <i>
+          Please select all the options that are consistent with the R&D
+          activity at your company.
+        </i>
+      </p>
+      <h2></h2>
       <div className="py-1">
         <label className="">
           <input
@@ -41,13 +47,13 @@ export default function ConfirmEligibility({
             name="businessComponent"
             checked={eligibilityCheckboxes.businessComponent}
             onChange={handleCheckboxChange}
-          />{" "}
-          Permitted purpose{" "}
+          />
+          <span className="px-1">
+            <b>The activity has a permitted purpose</b> - The activity
+            contributes to developing or improving the functionality, quality,
+            reliability or performance of a business component.
+          </span>
         </label>
-        <Tooltip
-          text="The activity is related to creating a new or improving an existing
-        business component"
-        ></Tooltip>
       </div>
       <div className="py-1">
         <label>
@@ -56,13 +62,13 @@ export default function ConfirmEligibility({
             name="technicalUncertainty"
             checked={eligibilityCheckboxes.technicalUncertainty}
             onChange={handleCheckboxChange}
-          />{" "}
-          Elimination of uncertainty{" "}
+          />
+          <span className="px-1">
+            <b>The activity aimed to eliminate uncertainty</b> - The activity is
+            aimed at addressing technological or scientific uncertainties
+            through experimentation and innovation.
+          </span>
         </label>
-        <Tooltip
-          text="The activity is aimed at addressing technological or scientific
-        uncertainties through experimentation and innovation."
-        ></Tooltip>
       </div>
       <div className="py-1">
         <label>
@@ -71,10 +77,13 @@ export default function ConfirmEligibility({
             name="processOrExperimentation"
             checked={eligibilityCheckboxes.processOrExperimentation}
             onChange={handleCheckboxChange}
-          />{" "}
-          Process of experimentation{" "}
+          />
+          <span className="px-1">
+            <b>My company went through a process of experimentation</b> - The
+            activity involves a systematic process to identify and evaluate
+            different alternatives to achieve the intended result.
+          </span>
         </label>
-        <Tooltip text="The activity involves a systematic process to identify and evaluate different alternatives to achieve the intended result."></Tooltip>
       </div>
       <div className="py-1">
         <label>
@@ -83,14 +92,20 @@ export default function ConfirmEligibility({
             name="scientificPrinciples"
             checked={eligibilityCheckboxes.scientificPrinciples}
             onChange={handleCheckboxChange}
-          />{" "}
-          Technological in nature{" "}
+          />
+          <span className="px-1">
+            <b>The activity was scientific in nature</b> - The activity relies
+            on the principles of engineering, physics, chemistry, computer
+            science, or other scientific disciplines.
+          </span>
         </label>
-        <Tooltip
-          text="The activity relies on the principles of engineering, physics, chemistry,
-        computer science, or other scientific disciplines."
-        ></Tooltip>
       </div>
+      <button
+        onClick={checkEligibility}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline "
+      >
+        Check eligibility
+      </button>
     </div>
   );
 }

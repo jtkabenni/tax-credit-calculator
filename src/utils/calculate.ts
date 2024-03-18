@@ -1,5 +1,18 @@
 export {};
 
+export function calculateTotal(nums: number[]): number {
+  // Initialize total
+  let total = 0;
+
+  // Loop through each number in the array and add it to total
+  for (const num of nums) {
+    total += num;
+  }
+
+  // Return the total sum
+  return total;
+}
+
 //calculation if there were no QREs in any previous tax years
 export function calculateFirstYearRDCredit(QRE: number) {
   // ASC percentage for the R&D Tax Credit calculation

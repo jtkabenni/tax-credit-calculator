@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import EstimateCreditForm from "./EstimateCreditForm";
+import EstimateCreditForm from "./components/EstimateCreditForm";
 import "./App.css";
-import ConfirmEligibility from "./ConfirmEligibility";
+import ConfirmEligibility from "./components/ConfirmEligibility";
 
 function App() {
   const [isEligible, setIsEligible] = useState(false);
-
+  const [submitted, setSubmitted] = useState(false);
   function handleEligibleStatus(isEligible: boolean) {
     setIsEligible(isEligible);
+    setSubmitted(true);
   }
 
   return (
@@ -16,15 +17,19 @@ function App() {
         Get your R&D credit estimate
       </h1>
       <ConfirmEligibility handleEligibleStatus={handleEligibleStatus} />
-      {isEligible ? (
-        <EstimateCreditForm />
-      ) : (
-        <div className="m-auto w-1/2">
-          <i>
-            You must meet all the criteria above to be be eligible for the R&D
-            credit
-          </i>
-        </div>
+      {submitted && (
+        <>
+          {isEligible ? (
+            <EstimateCreditForm />
+          ) : (
+            <div className="m-auto w-1/2 text-red-500">
+              <i>
+                You must meet all the criteria above to be be eligible for the
+                R&D credit
+              </i>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

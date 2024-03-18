@@ -1,57 +1,85 @@
 import React, { useState } from "react";
-import { calculateFirstYearRDCredit, calculateRDCredit } from "./calculate";
-import Tooltip from "./Tooltip";
-interface FormData {
-  wages: number;
-  contractors: number;
-  supplies: number;
-  cloudComputing: number;
-  year3: number;
-  year2: number;
-  year1: number;
+import {
+  calculateTotal,
+  calculateFirstYearRDCredit,
+  calculateRDCredit,
+} from "../utils/calculate";
+
+interface FormData<T> {
+  wages: T;
+  contractors: T;
+  supplies: T;
+  cloudComputing: T;
+  year3: T;
+  year2: T;
+  year1: T;
 }
+
 export default function EstimateCreditForm() {
-  const [formData, setFormData] = useState<FormData>({
-    wages: 0,
-    contractors: 0,
-    supplies: 0,
-    cloudComputing: 0,
-    year3: 0,
-    year2: 0,
-    year1: 0,
+  const [formData, setFormData] = useState<FormData<string>>({
+    wages: "",
+    contractors: "",
+    supplies: "",
+    cloudComputing: "",
+    year3: "",
+    year2: "",
+    year1: "",
   });
 
   const [credit, setCredit] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [isFirstYear, setIsFirstYear] = useState(false);
   const [prevYearsMessage, setPrevYearsMessage] = useState("");
+  const currYear = new Date().getFullYear();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: parseInt(value) });
+    let { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
+
+  function convertFormDataToNums(formData: FormData<string>): FormData<number> {
+    let { wages, contractors, supplies, cloudComputing, year1, year2, year3 } =
+      formData;
+    return {
+      wages: parseInt(wages) || 0,
+      contractors: parseInt(contractors) || 0,
+      supplies: parseInt(supplies) || 0,
+      cloudComputing: parseInt(cloudComputing) || 0,
+      year1: parseInt(year1) || 0,
+      year2: parseInt(year2) || 0,
+      year3: parseInt(year3) || 0,
+    };
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setPrevYearsMessage("");
     e.preventDefault();
+
+    // converting form data values to numbers for calculation
     let { wages, contractors, supplies, cloudComputing, year1, year2, year3 } =
-      formData;
-    const QRE = wages + contractors + supplies + cloudComputing;
+      convertFormDataToNums(formData);
+
+    //calculate total QRE for current year
+    const currYearQRE = calculateTotal([
+      wages,
+      contractors,
+      supplies,
+      cloudComputing,
+    ]);
 
     //calculate total credit based on whether or not first year with QRE
     let total;
-
     if (isFirstYear) {
-      total = calculateFirstYearRDCredit(QRE);
-    } else if (!formData.year3 || !formData.year2 || !formData.year1) {
+      total = calculateFirstYearRDCredit(currYearQRE);
+    } else if (!year1 || !year2 || !year3) {
       setPrevYearsMessage(
-        "Please enter your qualifying research expenditure for the previous three tax years"
+        "Please enter the qualifying research expenditure for the previous three tax years"
       );
       return;
     } else {
-      total = calculateRDCredit(year1, year2, year3, QRE);
+      total = calculateRDCredit(year1, year2, year3, currYearQRE);
     }
-
+    // if calculated credit is negative, set to 0
     setCredit(total < 0 ? 0 : total);
     setSubmitted(true);
   };
@@ -69,7 +97,7 @@ export default function EstimateCreditForm() {
               name="processOrExperimentation"
               checked={isFirstYear}
               onChange={(e) => setIsFirstYear(!isFirstYear)}
-            />{" "}
+            />
             I did not have Qualifying Research Expenditure (QRE) in all three
             previous tax years.
           </label>
@@ -82,7 +110,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year3"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  2022 Total QRE
+                  {currYear - 2} Total QRE
                 </label>
                 <input
                   type="number"
@@ -98,7 +126,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year2"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  2021 Total QRE
+                  {currYear - 3} Total QRE
                 </label>
                 <input
                   type="number"
@@ -114,7 +142,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year1"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  2020 Total QRE
+                  {currYear - 4} Total QRE
                 </label>
                 <input
                   type="number"
@@ -144,12 +172,13 @@ export default function EstimateCreditForm() {
             htmlFor="wages"
             className="block text-sm font-medium text-gray-700"
           >
-            Wages{" "}
-            <Tooltip text="Salaries, bonuses, and other forms of compensation paid to employees directly involved in conducting qualified research activities."></Tooltip>
+            <span className="px-1">
+              <b>Wages</b> - Salaries, bonuses, and other forms of compensation
+              paid to employees directly
+            </span>
           </label>
 
           <input
-            placeholder="100,000"
             type="number"
             id="wages"
             name="wages"
@@ -163,8 +192,10 @@ export default function EstimateCreditForm() {
             htmlFor="contractors"
             className="block text-sm font-medium text-gray-700"
           >
-            Contractors{" "}
-            <Tooltip text="Expenses paid to external individuals or entities hired to perform qualified research activities on behalf of the company."></Tooltip>
+            <span className="px-1">
+              <b> Contractors</b> - Expenses paid to external individuals or
+              entities hired to perform qualified research activities
+            </span>
           </label>
           <input
             type="number"
@@ -180,8 +211,10 @@ export default function EstimateCreditForm() {
             htmlFor="supplies"
             className="block text-sm font-medium text-gray-700"
           >
-            Supplies{" "}
-            <Tooltip text="Costs associated with materials and resources used in the R&D process."></Tooltip>
+            <span className="px-1">
+              <b> Supplies</b> - Costs associated with materials and resources
+              used
+            </span>
           </label>
           <input
             type="number"
@@ -197,8 +230,10 @@ export default function EstimateCreditForm() {
             htmlFor="cloudComputing"
             className="block text-sm font-medium text-gray-700"
           >
-            Cloud Computing{" "}
-            <Tooltip text="Expenses related to utilizing cloud-based services and infrastructure for R&D purposes."></Tooltip>
+            <span className="px-1">
+              <b>Cloud Computing</b> - Expenses related to utilizing cloud-based
+              services and infrastructure
+            </span>
           </label>
           <input
             type="number"
@@ -210,7 +245,7 @@ export default function EstimateCreditForm() {
           />
         </div>
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline">
           Get credit estimate
         </button>
         {submitted && (
