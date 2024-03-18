@@ -26,7 +26,7 @@ export default function EstimateCreditForm() {
     year1: "",
   });
 
-  const [credit, setCredit] = useState(0);
+  const [credit, setCredit] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isFirstYear, setIsFirstYear] = useState(false);
   const [prevYearsMessage, setPrevYearsMessage] = useState("");
@@ -80,7 +80,7 @@ export default function EstimateCreditForm() {
       total = calculateRDCredit(year1, year2, year3, currYearQRE);
     }
     // if calculated credit is negative, set to 0
-    setCredit(total < 0 ? 0 : total);
+    setCredit(total < 0 ? "0" : total.toFixed(2));
     setSubmitted(true);
   };
 
@@ -98,8 +98,10 @@ export default function EstimateCreditForm() {
               checked={isFirstYear}
               onChange={(e) => setIsFirstYear(!isFirstYear)}
             />
-            I did not have Qualifying Research Expenditure (QRE) in all three
-            previous tax years.
+            <span className="px-1">
+              I did not have Qualifying Research Expenditure (QRE) in all three
+              previous tax years.
+            </span>
           </label>
         </div>
         {!isFirstYear && (
@@ -110,7 +112,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year3"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {currYear - 2} Total QRE
+                  <span className="px-1"> {currYear - 2} Total QRE</span>
                 </label>
                 <input
                   type="number"
@@ -126,7 +128,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year2"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {currYear - 3} Total QRE
+                  <span className="px-1"> {currYear - 3} Total QRE</span>
                 </label>
                 <input
                   type="number"
@@ -142,7 +144,7 @@ export default function EstimateCreditForm() {
                   htmlFor="year1"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {currYear - 4} Total QRE
+                  <span className="px-1"> {currYear - 4} Total QRE</span>
                 </label>
                 <input
                   type="number"
@@ -252,8 +254,14 @@ export default function EstimateCreditForm() {
           <div className="mb-8">
             <h4 className="text-lg font-semibold text-gray-800 mt-2 mb-4">
               Your company may be eligible for up to ${credit} in R&D credit. To
-              ensure your R&D Tax Credit is calculated accurately, please
-              consult an R&D specialist.
+              ensure your R&D Tax Credit is calculated accurately, consult one
+              of the R&D specialists at
+              <a
+                href="https://sprx.tax/"
+                className="underline underline-offset-2 mx-1"
+              >
+                SPRX.
+              </a>
             </h4>
           </div>
         )}
