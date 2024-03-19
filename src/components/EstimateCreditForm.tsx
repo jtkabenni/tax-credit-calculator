@@ -27,9 +27,9 @@ export default function EstimateCreditForm() {
   });
 
   const [credit, setCredit] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isFirstYear, setIsFirstYear] = useState(false);
-  const [prevYearsMessage, setPrevYearsMessage] = useState("");
+  const [prevYearsErrorMessage, setPrevYearsErrorMessage] = useState("");
   const currYear = new Date().getFullYear();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ export default function EstimateCreditForm() {
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    setPrevYearsMessage("");
+    setPrevYearsErrorMessage("");
     e.preventDefault();
 
     // converting form data values to numbers for calculation
@@ -72,7 +72,7 @@ export default function EstimateCreditForm() {
     if (isFirstYear) {
       total = calculateFirstYearRDCredit(currYearQRE);
     } else if (!year1 || !year2 || !year3) {
-      setPrevYearsMessage(
+      setPrevYearsErrorMessage(
         "Please enter the qualifying research expenditure for the previous three tax years"
       );
       return;
@@ -81,7 +81,7 @@ export default function EstimateCreditForm() {
     }
     // if calculated credit is negative, set to 0
     setCredit(total < 0 ? "0" : total.toFixed(2));
-    setSubmitted(true);
+    setIsSubmitted(true);
   };
 
   return (
@@ -156,7 +156,7 @@ export default function EstimateCreditForm() {
                 />
               </div>
             </div>
-            <p className="text-red-500"> {prevYearsMessage}</p>
+            <p className="text-red-500"> {prevYearsErrorMessage}</p>
           </div>
         )}
 
@@ -250,7 +250,7 @@ export default function EstimateCreditForm() {
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline">
           Get credit estimate
         </button>
-        {submitted && (
+        {isSubmitted && (
           <div className="mb-8">
             <h4 className="text-lg font-semibold text-gray-800 mt-2 mb-4">
               Your company may be eligible for up to ${credit} in R&D credit. To

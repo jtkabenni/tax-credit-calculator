@@ -5,7 +5,7 @@ import ConfirmEligibility from "./components/ConfirmEligibility";
 
 function App() {
   const [isEligible, setIsEligible] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitted, setSubmitted] = useState(false);
   function handleEligibleStatus(isEligible: boolean) {
     setIsEligible(isEligible);
     setSubmitted(true);
@@ -17,7 +17,7 @@ function App() {
         Get your R&D credit estimate
       </h1>
       <ConfirmEligibility handleEligibleStatus={handleEligibleStatus} />
-      {submitted && (
+      {isSubmitted && (
         <>
           {isEligible ? (
             <EstimateCreditForm />
