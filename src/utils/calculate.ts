@@ -37,6 +37,5 @@ export function calculateRDCredit(
   // Multiply the remainder by 14% to get the current year R&D Tax Credit
   let RDCredit = remainder * ASCPercentage;
   RDCredit = parseFloat(RDCredit.toFixed(2));
-
   return RDCredit < 0 ? 0 : RDCredit;
 }
