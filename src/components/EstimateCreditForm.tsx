@@ -75,6 +75,7 @@ export default function EstimateCreditForm() {
       setPrevYearsErrorMessage(
         "Please enter the qualifying research expenditure for the previous three tax years"
       );
+      setIsSubmitted(false);
       return;
     } else {
       total = calculateRDCredit(year1, year2, year3, currYearQRE);
@@ -87,16 +88,20 @@ export default function EstimateCreditForm() {
   return (
     <div className="m-auto w-1/2 ">
       <form onSubmit={handleSubmit}>
-        <h3 className="text-xl font-semibold text-blue-600 mt-3 mb-2">
+        <h3
+          className="text-xl font-semibold text-blue-600 mt-3 mb-2"
+          data-testid="prev-year-qre-header"
+        >
           Previous years QREs
         </h3>
         <div className="py-1">
           <label>
             <input
               type="checkbox"
-              name="processOrExperimentation"
+              name="isFirstYear"
               checked={isFirstYear}
               onChange={(e) => setIsFirstYear(!isFirstYear)}
+              data-testid="isFirstYear-checkbox"
             />
             <span className="px-1">
               I did not have Qualifying Research Expenditure (QRE) in all three
@@ -156,7 +161,12 @@ export default function EstimateCreditForm() {
                 />
               </div>
             </div>
-            <p className="text-red-500"> {prevYearsErrorMessage}</p>
+            {prevYearsErrorMessage && (
+              <p className="text-red-500" data-testid="prev-years-error">
+                {" "}
+                {prevYearsErrorMessage}
+              </p>
+            )}
           </div>
         )}
 
@@ -247,11 +257,14 @@ export default function EstimateCreditForm() {
           />
         </div>
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline"
+          data-testid="get-estimate-button"
+        >
           Get credit estimate
         </button>
         {isSubmitted && (
-          <div className="mb-8">
+          <div className="mb-8" data-testid="credit-estimation-message">
             <h4 className="text-lg font-semibold text-gray-800 mt-2 mb-4">
               Your company may be eligible for up to ${credit} in R&D credit. To
               ensure your R&D Tax Credit is calculated accurately, consult one

@@ -10,10 +10,9 @@ export default function ConfirmEligibility({
   const [eligibilityCheckboxes, setEligibilityCheckboxes] = useState({
     businessComponent: false,
     technicalUncertainty: false,
-    processOrExperimentation: false,
+    processOfExperimentation: false,
     scientificPrinciples: false,
   });
-
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     setEligibilityCheckboxes((prevState) => ({
@@ -46,6 +45,7 @@ export default function ConfirmEligibility({
             name="businessComponent"
             checked={eligibilityCheckboxes.businessComponent}
             onChange={handleCheckboxChange}
+            data-testid="businessComponent-checkbox"
           />
           <span className="px-1">
             <b>The activity has a permitted purpose</b> - The activity
@@ -61,6 +61,7 @@ export default function ConfirmEligibility({
             name="technicalUncertainty"
             checked={eligibilityCheckboxes.technicalUncertainty}
             onChange={handleCheckboxChange}
+            data-testid="technicalUncertainty-checkbox"
           />
           <span className="px-1">
             <b>The activity aimed to eliminate uncertainty</b> - The activity is
@@ -73,9 +74,10 @@ export default function ConfirmEligibility({
         <label>
           <input
             type="checkbox"
-            name="processOrExperimentation"
-            checked={eligibilityCheckboxes.processOrExperimentation}
+            name="processOfExperimentation"
+            checked={eligibilityCheckboxes.processOfExperimentation}
             onChange={handleCheckboxChange}
+            data-testid="processOfExperimentation-checkbox"
           />
           <span className="px-1">
             <b>My company went through a process of experimentation</b> - The
@@ -91,6 +93,7 @@ export default function ConfirmEligibility({
             name="scientificPrinciples"
             checked={eligibilityCheckboxes.scientificPrinciples}
             onChange={handleCheckboxChange}
+            data-testid="scientificPrinciples-checkbox"
           />
           <span className="px-1">
             <b>The activity was scientific in nature</b> - The activity relies
@@ -102,6 +105,7 @@ export default function ConfirmEligibility({
       <button
         onClick={checkEligibility}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline "
+        data-testid="checkEligibility-button"
       >
         Check eligibility
       </button>

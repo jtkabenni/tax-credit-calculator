@@ -22,7 +22,10 @@ function App() {
           {isEligible ? (
             <EstimateCreditForm />
           ) : (
-            <div className="m-auto w-1/2 text-red-500">
+            <div
+              className="m-auto w-1/2 text-red-500"
+              data-testid="eligibility-error"
+            >
               <i>
                 You must meet all the criteria above to be be eligible for the
                 R&D credit
