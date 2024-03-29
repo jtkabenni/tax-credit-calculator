@@ -307,10 +307,12 @@ export default function EstimateCreditForm() {
               of the R&D specialists at
               <a
                 href="https://sprx.tax/"
-                className="underline underline-offset-2 mx-1"
+                className="underline underline-offset-2 ml-1"
+                target="_blank"
               >
-                SPRX.
+                SPRX
               </a>
+              .
             </h4>
           </div>
         )}
