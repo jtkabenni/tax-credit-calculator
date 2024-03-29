@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface ConfirmEligibilityProps {
   handleEligibleStatus: (isEligible: boolean) => void;
@@ -7,18 +7,40 @@ interface ConfirmEligibilityProps {
 export default function ConfirmEligibility({
   handleEligibleStatus,
 }: ConfirmEligibilityProps) {
-  const [eligibilityCheckboxes, setEligibilityCheckboxes] = useState({
-    businessComponent: false,
-    technicalUncertainty: false,
-    processOfExperimentation: false,
-    scientificPrinciples: false,
-  });
+  // retrieve stored checkbox data
+  const storedEligibilityCheckboxesData = window.localStorage.getItem(
+    "eligibilityCheckboxes"
+  );
+  // set initial checkbox state based on local storage
+  const initialEligibilityCheckboxesState = storedEligibilityCheckboxesData
+    ? JSON.parse(storedEligibilityCheckboxesData)
+    : {
+        businessComponent: false,
+        technicalUncertainty: false,
+        processOfExperimentation: false,
+        scientificPrinciples: false,
+      };
+
+  const [eligibilityCheckboxes, setEligibilityCheckboxes] = useState(
+    initialEligibilityCheckboxesState
+  );
+
+  // storing updates to checkboxes to local storage
+  useEffect(() => {
+    window.localStorage.setItem(
+      "eligibilityCheckboxes",
+      JSON.stringify(eligibilityCheckboxes)
+    );
+  }, [eligibilityCheckboxes]);
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
-    setEligibilityCheckboxes((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
+    setEligibilityCheckboxes(
+      (prevState: typeof initialEligibilityCheckboxesState) => ({
+        ...prevState,
+        [name]: checked,
+      })
+    );
   };
 
   function checkEligibility() {

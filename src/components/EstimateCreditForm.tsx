@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   calculateTotal,
   calculateFirstYearRDCredit,
@@ -16,27 +16,49 @@ interface FormData<T> {
 }
 
 export default function EstimateCreditForm() {
-  const [formData, setFormData] = useState<FormData<string>>({
-    wages: "",
-    contractors: "",
-    supplies: "",
-    cloudComputing: "",
-    year3: "",
-    year2: "",
-    year1: "",
-  });
+  // retrieve stored form and isFirstYear data
+  const storedFormData = window.localStorage.getItem("formData");
+  const storedIsFirstYear = window.localStorage.getItem("isFirstYear");
 
+  // set initial form and isFirstYear state based on local storage
+  const initialFormDataState = storedFormData
+    ? JSON.parse(storedFormData)
+    : {
+        wages: "",
+        contractors: "",
+        supplies: "",
+        cloudComputing: "",
+        year3: "",
+        year2: "",
+        year1: "",
+      };
+
+  const initialIsFirstYearState = storedIsFirstYear
+    ? JSON.parse(storedIsFirstYear)
+    : false;
+
+  const [formData, setFormData] =
+    useState<FormData<string>>(initialFormDataState);
+  const [isFirstYear, setIsFirstYear] = useState(initialIsFirstYearState);
   const [credit, setCredit] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isFirstYear, setIsFirstYear] = useState(false);
   const [prevYearsErrorMessage, setPrevYearsErrorMessage] = useState("");
   const currYear = new Date().getFullYear();
+
+  // storing updates to form and isFirstYear data to local storage
+  useEffect(() => {
+    window.localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
+  useEffect(() => {
+    window.localStorage.setItem("isFirstYear", JSON.stringify(isFirstYear));
+  }, [isFirstYear]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // converting all form strings to integers, defaulting to 0 if empty
   function convertFormDataToNums(formData: FormData<string>): FormData<number> {
     let { wages, contractors, supplies, cloudComputing, year1, year2, year3 } =
       formData;
@@ -84,6 +106,12 @@ export default function EstimateCreditForm() {
     setCredit(total < 0 ? "0" : total.toFixed(2));
     setIsSubmitted(true);
   };
+
+  function resetForm(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    localStorage.clear();
+    window.location.reload();
+  }
 
   return (
     <div className="m-auto w-1/2 ">
@@ -163,7 +191,6 @@ export default function EstimateCreditForm() {
             </div>
             {prevYearsErrorMessage && (
               <p className="text-red-500" data-testid="prev-years-error">
-                {" "}
                 {prevYearsErrorMessage}
               </p>
             )}
@@ -256,13 +283,22 @@ export default function EstimateCreditForm() {
             className="mt-1 p-2 w-full border rounded-md"
           />
         </div>
-
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline"
-          data-testid="get-estimate-button"
-        >
-          Get credit estimate
-        </button>
+        <div className="flex justify-between">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline"
+            data-testid="get-estimate-button"
+          >
+            Get credit estimate
+          </button>
+          <button
+            onClick={(e) => {
+              resetForm(e);
+            }}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline"
+          >
+            Reset
+          </button>
+        </div>
         {isSubmitted && (
           <div className="mb-8" data-testid="credit-estimation-message">
             <h4 className="text-lg font-semibold text-gray-800 mt-2 mb-4">
